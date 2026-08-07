@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mazha Nokki &mdash; Kannur Block Rainfall Watch</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="rain-layer" id="rainLayer" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">മ</span>
+    <div class="brand-text">
+      <span class="brand-title">Mazha Nokki</span>
+      <span class="brand-sub">Kannur Block Rainfall Watch</span>
+    </div>
+  </div>
+  <nav class="topnav">
+    <button class="nav-btn active" data-view="map">Map</button>
+    <button class="nav-btn" data-view="report">Report rainfall</button>
+    <button class="nav-btn" data-view="admin">Admin</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ============ MAP VIEW ============ -->
+  <section id="view-map" class="view active">
+    <div class="map-shell">
+      <div id="map"></div>
+
+      <div class="panel panel-legend">
+        <div class="panel-head">
+          <span class="eyebrow">24-hr total &middot; 8AM&ndash;8AM</span>
+          <h2 id="dateLabel">Loading date&hellip;</h2>
+        </div>
+        <ul class="legend" id="legendList"></ul>
+        <div class="panel-foot">
+          <label for="dateInput">Show readings for</label>
+          <input type="date" id="dateInput" />
+        </div>
+      </div>
+
+      <div class="panel panel-detail" id="detailPanel">
+        <button class="panel-close" id="closeDetail" aria-label="Close">&times;</button>
+        <div class="breadcrumb" id="breadcrumb">Kannur District</div>
+        <h2 id="detailName">Select a block or panchayat</h2>
+        <div id="detailBody">
+          <p class="muted">Click a shaded area on the map to see its rainfall reports, or zoom in to see individual panchayats and municipalities.</p>
+        </div>
+      </div>
+
+      <div class="scale-note" id="statusNote">Loading Kannur boundaries&hellip;</div>
+    </div>
+  </section>
+
+  <!-- ============ REPORT VIEW ============ -->
+  <section id="view-report" class="view">
+    <div class="form-shell">
+      <div class="form-intro">
+        <span class="eyebrow">Ground truth</span>
+        <h1>Log today's rainfall</h1>
+        <p>Measure with an open, level container between <strong>8:00 AM and 8:00 AM the next day</strong>. Enter the total in millimetres. One report per location per day is enough &mdash; if you already reported today, come back tomorrow.</p>
+      </div>
+
+      <form id="reportForm" class="report-form">
+        <div class="field">
+          <label for="blockSelect">Block / Municipality</label>
+          <select id="blockSelect" required>
+            <option value="">Choose a block&hellip;</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="locationSelect">Panchayat / Municipality</label>
+          <select id="locationSelect" required disabled>
+            <option value="">Choose a block first&hellip;</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="localityInput">Locality / ward (optional)</label>
+          <input type="text" id="localityInput" placeholder="e.g. near Government UP School" maxlength="120" />
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="obsDate">Observation date <span class="hint">(end of the 24-hr window)</span></label>
+            <input type="date" id="obsDate" required />
+          </div>
+          <div class="field">
+            <label for="rainfallInput">Rainfall (mm)</label>
+            <input type="number" id="rainfallInput" min="0" max="2000" step="0.1" placeholder="e.g. 42.5" required />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="reporterName">Your name</label>
+            <input type="text" id="reporterName" maxlength="80" required />
+          </div>
+          <div class="field">
+            <label for="reporterSchool">School (optional)</label>
+            <input type="text" id="reporterSchool" maxlength="120" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="notesInput">Notes (optional)</label>
+          <textarea id="notesInput" rows="2" maxlength="300" placeholder="Flooding, waterlogging, anything unusual"></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit">Submit reading</button>
+        <p class="form-status" id="formStatus"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ ADMIN VIEW ============ -->
+  <section id="view-admin" class="view">
+    <div class="admin-shell">
+      <div class="admin-intro">
+        <span class="eyebrow">Teacher / moderator</span>
+        <h1>Review submissions</h1>
+        <p>Enter the admin key to verify or reject student-submitted readings before they appear on the public map.</p>
+      </div>
+
+      <div class="admin-auth">
+        <input type="password" id="adminKeyInput" placeholder="Admin key" />
+        <button id="adminLoadBtn" class="btn-secondary">Load pending</button>
+      </div>
+
+      <div id="adminList" class="admin-list"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="sitefoot">
+  <span>Built by students, for students &mdash; a Kannur-first pilot of a state-wide idea.</span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="js/kannur-data.js"></script>
+<script src="js/config.js"></script>
+<script src="js/rainfall-scale.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
