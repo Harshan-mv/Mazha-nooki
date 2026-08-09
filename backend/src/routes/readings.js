@@ -18,9 +18,9 @@ router.post('/', submitLimiter, async (req, res) => {
   try {
     const { locationId, observationDate, rainfallMm, locality, reporterName, reporterSchool, notes } = req.body;
 
-    if (!locationId || !observationDate || rainfallMm === undefined || !reporterName) {
+    if (!locationId || !observationDate || rainfallMm === undefined || !reporterName || !reporterSchool) {
       return res.status(400).json({
-        error: 'locationId, observationDate, rainfallMm and reporterName are required'
+        error: 'locationId, observationDate, rainfallMm, reporterName, and reporterSchool are required'
       });
     }
 

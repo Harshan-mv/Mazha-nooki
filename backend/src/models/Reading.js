@@ -23,7 +23,7 @@ const ReadingSchema = new mongoose.Schema(
     locality: { type: String, trim: true, maxlength: 120 },
 
     reporterName: { type: String, required: true, trim: true, maxlength: 80 },
-    reporterSchool: { type: String, trim: true, maxlength: 120 },
+    reporterSchool: { type: String, required: true, trim: true, maxlength: 120 },
     notes: { type: String, trim: true, maxlength: 300 },
 
     // Lightweight moderation without requiring student login
