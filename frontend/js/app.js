@@ -316,12 +316,28 @@
 
     try {
       await apiPost('/readings', payload);
-      statusEl.textContent = 'Thank you! Your reading was submitted and is awaiting verification.';
-      statusEl.className = 'form-status ok';
+      
       e.target.reset();
       document.getElementById('locationSelect').innerHTML = '<option value="">Choose a block first…</option>';
       document.getElementById('locationSelect').disabled = true;
       document.getElementById('obsDate').value = todayStr();
+      
+      statusEl.textContent = '';
+      statusEl.className = 'form-status';
+
+      // Show toast
+      const toast = document.getElementById('toast');
+      toast.textContent = 'Thank you for your submission!';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 4000);
+
+      // Switch to map view
+      document.querySelector('.nav-btn[data-view="map"]').click();
+
+      // Reload map data to reflect the potential changes if verified immediately
+      // or just to refresh the state
+      loadMapData(document.getElementById('dateInput').value);
+
     } catch (err) {
       statusEl.textContent = 'Could not submit: ' + err.message;
       statusEl.className = 'form-status err';

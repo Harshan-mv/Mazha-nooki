@@ -358,6 +358,26 @@ textarea { resize: vertical; }
   border-top: 1px solid var(--line);
 }
 
+/* ---------- toast notification ---------- */
+.toast {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--brass-bright);
+  color: var(--ink);
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: var(--shadow);
+  z-index: 9999;
+  transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.toast.show {
+  bottom: 30px;
+}
+
 /* ---------- responsive ---------- */
 @media (max-width: 860px) {
   .topbar { padding: 12px 16px; }
